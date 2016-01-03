@@ -9,19 +9,31 @@ class User(models.Model):
 	user_name = models.CharField(max_length=50)
 	password = models.CharField(max_length=30)
 
+	def __str__(self):
+		return self.user_name
+
 class Batch(models.Model):
 	# all batches have their unique identification
 	# for example, IT-2K11
 	batch_name = models.CharField(max_length=20)
+
+	def __unicode__(self):
+		return self.batch_name
 
 class Course(models.Model):
 	# Course details
 	# for example, course_name = MCA
 	course_name = models.CharField(max_length=30)
 
+	def __str__(self):
+		return self.course_name
+
 class ProjectDocument(models.Model):
 	# Documents to be submitted
 	document_name = models.CharField(max_length=30)
+
+	def __unicode__(self):
+		return self.document_name
 
 
 
