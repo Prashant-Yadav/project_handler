@@ -29,31 +29,8 @@
 
 <body class="home">
 	
-	<!-- Fixed navbar -->
-	<div class="navbar navbar-inverse navbar-fixed-top headroom" >
-		<div class="container">
-			<div class="navbar-header">
-				<!-- Button for smallest screens -->
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="icon-bar"></span> 
-					<span class="icon-bar"></span> 
-					<span class="icon-bar"></span> 
-				</button>
-				<a class="navbar-brand" href="index.html">
-					<img src="{% static 'projects_app/img/3.png' %}" style="margin:-20px; padding:0px 0px 40px 0px;" alt="Progressus HTML5 template">
-				</a>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav pull-right">
-					<li class="active"><a href="#">Home</a></li>
-					<li><a href="about.html">About</a></li>
-					<li><a href="contact.html">Contact</a></li>
-					<li><a href="faq.html">FAQ</a></li>
-				</ul>
-			</div><!--/.nav-collapse -->
-		</div>
-	</div> 
-	<!-- /.navbar -->
+	<!-- custom template to include navbar -->	
+	{% include 'projects_app/header.html' %}
 
 	<header id="head" class="secondary"></header>
 
@@ -70,19 +47,22 @@
 					</header>
 
 					<!-- User login form starts here-->
-					<form action="{% url 'projects_app:login' %}" method="post" role="form" class="form-horizontal" id="loginForm">
+					<form action="{% url 'projects_app:login' %}" method="post" 
+					role="form" class="form-horizontal" id="loginForm">
 				        
 				        {% csrf_token %}
 
 				        <div class="form-group">
-				        	<label for="{{ form.email.id_for_label }}" class="col-sm-2 control-label">Username </label>
+				        	<label for="{{ form.email.id_for_label }}" 
+				        	class="col-sm-2 control-label">Username </label>
 				        	<div class="col-sm-10">
 				        		{{ form.email }}
 				        	</div>
 				        </div>
 				        
 				        <div class="form-group">
-				        	<label for="{{ form.password.id_for_label }}" class="col-sm-2 control-label">Password </label>
+				        	<label for="{{ form.password.id_for_label }}" 
+				        	class="col-sm-2 control-label">Password </label>
 				        	<div class="col-sm-10">
 				        		{{ form.password }}
 				        	</div>
@@ -99,7 +79,8 @@
 
 						<div class="form-group">
 							<div class="col-sm-offset-2 col-sm-10">
-								<input class="btn btn-action" type="submit" name="login" value="Sign-in">
+								<input class="btn btn-action" type="submit" 
+								name="login" value="Sign-in">
 							</div>
 						</div>
 					</form>	
@@ -114,39 +95,8 @@
 
 	</section>
 	
-
-
-	<footer id="footer" class="top-space">
-
-		<div class="footer2">
-			<div class="container">
-				<div class="row">
-					
-					<div class="col-md-6 widget">
-						<div class="widget-body">
-							<p class="simplenav">
-								<a href="#">Home</a> | 
-								<a href="about.html">About</a> |
-								<a href="sidebar-right.html">Sidebar</a> |
-								<a href="contact.html">Contact</a> |
-								<b><a href="signup.html">Sign up</a></b>
-							</p>
-						</div>
-					</div>
-
-					<div class="col-md-6 widget">
-						<div class="widget-body">
-							<p class="text-right">
-								Copyright &copy; 2014, Your name. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a> 
-							</p>
-						</div>
-					</div>
-
-				</div> <!-- /row of widgets -->
-			</div>
-		</div>
-
-	</footer>	
+	<!-- custom template to include footer -->
+	{% include 'projects_app/footer.html' %}	
 
 	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>

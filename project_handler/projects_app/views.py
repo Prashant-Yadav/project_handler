@@ -1,11 +1,16 @@
 
 from django.shortcuts import render_to_response, redirect, render
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import loader, RequestContext
-from django.contrib.auth import login as django_login, authenticate, logout as django_logout
+from django.contrib.auth import ( login as django_login, 
+								authenticate, 
+								logout as django_logout)
+from django.contrib.auth.decorators import login_required
 
 from .models import Course, Batch, User, Student, Mentor
-from .forms import StudentRegistrationForm, MentorRegistrationForm, AuthenticationForm
+from .forms import ( StudentRegistrationForm, 
+					MentorRegistrationForm, 
+					AuthenticationForm )
 
 
 def index(request):
@@ -30,17 +35,24 @@ def registration(request):
 				user.set_password(student_form.cleaned_data['password1'])
 				user.save()
 
-				student = Student(student_name=name, roll_no=student_form.cleaned_data['roll_no'], semester=int(student_form.cleaned_data['sem']), course=student_form.cleaned_data['course'], batch=student_form.cleaned_data['batch'], user=user)
+				student = Student(student_name=name, 
+								roll_no=student_form.cleaned_data['roll_no'], 
+								semester=int(student_form.cleaned_data['sem']), 
+								course=student_form.cleaned_data['course'], 
+								batch=student_form.cleaned_data['batch'], 
+								user=user
+								)
 				student.save()
 
-				user = authenticate(email=student_form.cleaned_data['email'], password=student_form.cleaned_data['password1'])
+				user = authenticate(email=student_form.cleaned_data['email'], 
+								password=student_form.cleaned_data['password1']
+								)
+
 				if user is not None:
 					if user.is_active:
 						# Login user
 						django_login(request, user)
-						return HttpResponse("Student registered and Logged in")
-					else:
-						return HttpResponse('user is not active')
+						return HttpResponseRedirect("/student")
 			except:
 				raise Http404("Student registration failed.")
 			
@@ -55,12 +67,15 @@ def registration(request):
 				mentor = Mentor(mentor_name=name, user=user)
 				mentor.save()
 
-				user = authenticate(email=mentor_form.cleaned_data['email'], password=mentor_form.cleaned_data['password1'])
+				user = authenticate(email=mentor_form.cleaned_data['email'], 
+									password=mentor_form.cleaned_data['password1']
+									)
+
 				if user is not None:
 					if user.is_active:
 						# Login user
 						django_login(request, user)
-						return HttpResponse("Mentor Registered and Logged in.")
+						return HttpResponseRedirect("/mentor")
 			except:
 				raise Http404("Mentor registration failed.")
 
@@ -73,7 +88,8 @@ def registration(request):
 
 	return render_to_response('projects_app/registration.html', 
 							{
-								'student_form': student_form, 'mentor_form': mentor_form 
+								'student_form': student_form, 
+								'mentor_form': mentor_form 
 								}, 
 							context_instance=RequestContext(request)
 							)
@@ -86,18 +102,27 @@ def login(request):
     if request.method == 'POST':
         login_form = AuthenticationForm(data=request.POST)
         if login_form.is_valid():
+        	email = request.POST['email']
         	try:
-        		user = authenticate(email=request.POST['email'], password=request.POST['password'])
+        		user = authenticate(email=email, password=request.POST['password'])
         		if user is not None:
         			if user.is_active:
         				django_login(request, user)
-        				return HttpResponse('Successfully logged in')
-        			else:
-        				return HttpResponse('user not active')
+        				user = User.objects.get(email=email)
+        				
+        				try:
+        					student=user.student_set.get()
+        					return HttpResponseRedirect("/student")
+        				except:
+        					try:
+        						mentor = user.mentor_set.get()
+        						return HttpResponseRedirect("/mentor")
+        					except:
+        						raise Http404("User does not exist.")
         		else:
-        			return HttpResponse('user none')
+        			return HttpResponseRedirect('/invalid_login')
         	except:
-        		raise Http404('Login failed.')
+        		raise HttpResponseRedirect('/invalid_login')
             
     else:
         login_form = AuthenticationForm()
@@ -111,4 +136,27 @@ def logout(request):
 	Log out view
 	'''
 	django_logout(request)
-	return HttpResponse('Logged out')
+	return HttpResponseRedirect('/')
+
+@login_required
+def student_profile(request):
+	user = User.objects.get(email=request.user.email)
+	try:
+		student = user.student_set.get()
+		context = { 'student': student }
+		return render(request, 'projects_app/student_profile.html', context)
+	except:
+		raise Http404('Unable to detect student')
+
+@login_required
+def mentor_profile(request):
+	user = User.objects.get(email=request.user.email)
+	try:
+		mentor = user.mentor_set.get()
+		context = { 'mentor': mentor }
+		return render(request, 'projects_app/mentor_profile.html', context)
+	except:
+		raise Http404('Unable to detect student')
+
+def invalid_login(request):
+	pass

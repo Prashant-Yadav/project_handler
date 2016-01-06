@@ -17,9 +17,16 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav pull-right">
-				<li class="active"><a href="#">Home</a></li>
+				<li class="active"><a href="{% url 'projects_app:index' %}">Home</a></li>
 				<li><a href="about.html">About</a></li>
 				<li><a href="contact.html">Contact</a></li>
+				
+				{% if student or mentor %}
+				<li><a href="{% url 'projects_app:logout' %}">Logout</a></li>
+				{% else %}
+				<li><a href="{% url 'projects_app:login' %}">Sign In</a></li>
+				{% endif %}
+				
 				<li><a href="faq.html">FAQ</a></li>
 			</ul>
 		</div><!--/.nav-collapse -->

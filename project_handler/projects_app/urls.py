@@ -9,5 +9,8 @@ urlpatterns = [
 				url(r'^footer/$', views.footer_info, name='footer_info'),
 				url(r'^registration/$', views.registration, name='registration'),
 				url(r'^login/$', views.login, name='login'),
-				url(r'^logout/$', views.login, name='logout'),
+				url(r'^logout/$', views.logout, name='logout'),
+				url(r'^student/$', views.student_profile, name='student_profile'),
+				url(r'^mentor/$', views.mentor_profile, name='mentor_profile'),
+				url(r'^invalid_login/$', views.invalid_login, name='invalid_login'),
 				]

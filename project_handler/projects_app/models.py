@@ -101,12 +101,18 @@ class Student(models.Model):
 	batch = models.ForeignKey(Batch)		# Foreign Key to Batch model
 	user = models.ForeignKey(User)		# Identification of user credentials
 
+	def __str__(self):
+		return self.student_name
 
 
 class Mentor(models.Model):
 	# Mentor details
 	mentor_name = models.CharField(max_length=50)
 	user = models.ForeignKey(User)			# Foreign key to user model
+
+	def __str__(self):
+		return self.mentor_name
+
 
 class MentorReview(models.Model):
 	# Reviews provided by mentor to any approved project
