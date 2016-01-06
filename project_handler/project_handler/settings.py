@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!8n&a+i)!j2$3i9l_tns1tvqgq_mjl5+b6##ao0zsu&ci5vqjr'
+SECRET_KEY = 'qgx+tm#8&q$_aq9d+9m4=f&*8xqh#_i=b^v6t%i4w=q1yw$5^r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,7 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'projects_app',
+    'projects_app'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -78,11 +78,11 @@ WSGI_APPLICATION = 'project_handler.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'project_handler_db',
-	'USER': 'db_admin',
-	'PASSWORD': 'sysadmin',
-	'HOST': 'localhost',
-	'PORT': '',
+        'NAME': 'project_handler',
+        'USER': 'db_admin',
+        'PASSWORD': 'sysadmin',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -105,3 +105,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTH_USER_MODEL = 'projects_app.User'
+
+AUTHENTICATION_BACKEND = ['projects_app.backends.EmailAuthBackend']

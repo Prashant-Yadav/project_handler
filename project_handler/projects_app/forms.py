@@ -1,6 +1,7 @@
+
 from django import forms
 
-from .models import Student, Course, Batch, User
+from .models import Course, Batch, User
 
 
 class StudentRegistrationForm(forms.Form):
@@ -41,6 +42,7 @@ class StudentRegistrationForm(forms.Form):
 		return self.cleaned_data
 
 
+
 class MentorRegistrationForm(forms.Form):
 	mentor_name = forms.CharField(label="Full Name", max_length="50")
 
@@ -55,3 +57,14 @@ class MentorRegistrationForm(forms.Form):
 			if self.cleaned_data['password1'] != self.cleaned_data['password2']:
 				raise forms.ValidationError("The two password fields did not match.")
 		return self.cleaned_data
+
+
+
+class AuthenticationForm(forms.Form):
+	
+	# Login form
+	email = forms.EmailField(widget=forms.widgets.TextInput)
+	password = forms.CharField(widget=forms.widgets.PasswordInput)
+
+	class Meta:
+		fields = ['email', 'password']
