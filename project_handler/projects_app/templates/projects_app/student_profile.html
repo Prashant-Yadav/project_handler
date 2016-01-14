@@ -44,7 +44,15 @@
 				{% endif %}
 			</div>
 		</div>
-	</section>
+	</section>	
+
+	<div class="container">
+		<ul>
+			<li>
+				<a type="button" href="{% url 'projects_app:index' %}">Projects</a>
+			</li>
+		</ul>
+	</div>
 
 	<!-- custom template to footer -->	
 	{% include 'projects_app/footer.html' %}	
@@ -56,5 +64,10 @@
 	<script src="{% static 'projects_app/js/headroom.min.js' %}"></script>
 	<script src="{% static 'projects_app/js/jQuery.headroom.min.js' %}"></script>
 	<script src="{% static 'projects_app/js/template.js' %}"></script>
+
+	<script src="{% static 'projects_app/js/angular/angular.min.js' %}"></script>
+	<script src="{% static 'projects_app/js/angular/angular-ui-router.min.js' %}"></script>
+
+	<script src="{% static 'projects_app/js/app.js' %}"></script>
 </body>
 </html>
