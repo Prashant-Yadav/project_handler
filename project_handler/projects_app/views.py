@@ -7,10 +7,11 @@ from django.contrib.auth import ( login as django_login,
 								logout as django_logout)
 from django.contrib.auth.decorators import login_required
 
-from .models import Course, Batch, User, Student, Mentor
+from .models import Course, Batch, User, Student, Mentor, StudentProject, Project
 from .forms import ( StudentRegistrationForm, 
 					MentorRegistrationForm, 
-					AuthenticationForm )
+					AuthenticationForm,
+					ProjectRegistrationForm )
 
 
 def index(request):
@@ -141,12 +142,16 @@ def logout(request):
 @login_required
 def student_profile(request):
 	user = User.objects.get(email=request.user.email)
+
+	student = user.student_set.get()
 	try:
-		student = user.student_set.get()
-		context = { 'student': student }
-		return render(request, 'projects_app/student_profile.html', context)
-	except:
-		raise Http404('Unable to detect student')
+		project = StudentProject.objects.filter(student=student)
+	except StudentProject.DoesNotExist:
+		project = None
+	context = { 'student': student, 'student_projects': project }
+
+	return render(request, 'projects_app/student_profile.html', context)
+
 
 @login_required
 def mentor_profile(request):
@@ -160,3 +165,40 @@ def mentor_profile(request):
 
 def invalid_login(request):
 	pass
+
+@login_required
+def project_register(request):
+
+	if request.method == 'POST':
+		form = ProjectRegistrationForm(request.POST)
+		if form.is_valid():
+			try:
+				project = Project(project_name=form.cleaned_data['project_name'],
+								project_description=form.cleaned_data['project_description'],
+								github_link=form.cleaned_data['github_link'],
+								mentor=form.cleaned_data['mentor']
+							)
+				project.save()
+
+				user = User.objects.get(email=request.user.email)
+				student = user.student_set.get()
+				
+				student_project = StudentProject(student=student,
+												project=project
+												)
+				student_project.save()
+
+				return HttpResponseRedirect("/student")
+
+			except :
+				raise Http404("Project Registraion failed.")
+
+	else:
+		form = ProjectRegistrationForm()
+
+	return render_to_response('projects_app/project_register.html',
+							{
+								'form': form,
+							},
+							context_instance=RequestContext(request)
+						)

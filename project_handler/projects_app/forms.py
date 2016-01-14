@@ -1,7 +1,7 @@
 
 from django import forms
 
-from .models import Course, Batch, User
+from .models import Course, Batch, User, Mentor
 
 
 class StudentRegistrationForm(forms.Form):
@@ -68,3 +68,13 @@ class AuthenticationForm(forms.Form):
 
 	class Meta:
 		fields = ['email', 'password']
+
+
+class ProjectRegistrationForm(forms.Form):
+
+	# Form for registering student project
+	project_name = forms.CharField(max_length="50")
+	project_description = forms.CharField(widget=forms.Textarea())
+	github_link = forms.URLField()
+	mentor = forms.ModelChoiceField(queryset=Mentor.objects.all())
+

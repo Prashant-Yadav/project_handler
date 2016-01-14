@@ -20,6 +20,18 @@
 	<link rel="stylesheet" href="{% static 'projects_app/css/bootstrap-theme.css' %}" media="screen" >
 	<link rel="stylesheet" href="{% static 'projects_app/css/main.css' %}">
 
+	<link rel="stylesheet" href="{% static 'projects_app/css/simple-sidebar.css' %}">	
+
+	<style type="text/css">
+		.capitalize{
+			text-transform: capitalize;
+		}
+
+		.main-nav .active{
+			background-color: #151840;
+		}
+	</style>
+
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
 	<script src="assets/js/html5shiv.js"></script>
@@ -27,14 +39,14 @@
 	<![endif]-->
 </head>
 
-<body>
+<body ng-app>
 	<!-- custom template to include navbar -->	
 	{% include 'projects_app/header.html' %}
 
 	<header id="head" class="secondary"></header>
 
+	<!--
 	<section>
-		<!-- .container -->
 		<div class="container">
 			<div class="row">
 				{% if student %}
@@ -44,18 +56,103 @@
 				{% endif %}
 			</div>
 		</div>
-	</section>	
+	</section>
+	-->
 
-	<div class="container">
-		<ul>
-			<li>
-				<a type="button" href="{% url 'projects_app:index' %}">Projects</a>
-			</li>
-		</ul>
-	</div>
+	<div id="wrapper">
 
-	<!-- custom template to footer -->	
-	{% include 'projects_app/footer.html' %}	
+		<!-- Sidebar -->
+		<div ng-init="tab=1" id="sidebar-wrapper">
+			<ul class="sidebar-nav main-nav">
+				<li ng-class="{ active:tab === 1 }" >
+					<a type="button" href ng-click="tab = 1">
+						<h3  class="capitalize" >{{ student.student_name }}</h3>
+						<h5>{{ request.user.email }}</h5>
+					</a>
+				</li>
+				<li ng-class="{ active:tab === 2 }">
+					<a type="button" href ng-click="tab = 2">Projects</a>
+				</li>
+				<li ng-class="{ active:tab === 3 }">
+					<a href ng-click="tab = 3">Notifications</a>
+				</li>
+			</ul>
+		</div>
+		<!-- /#sidebar-wrapper -->
+
+		<!-- Page Content -->
+		<div id="page-content-wrapper">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12 capitalize" ng-show="tab === 1">
+						<h1>{{ student.student_name }} </h1>
+						<ul class="list-group">
+							<li class="list-group-item">
+								<div>
+									Roll No: 	{{student.roll_no}} 
+								</div>
+							</li>
+							<li class="list-group-item">
+								<div>
+									Course: 	{{student.course}} 
+								</div>
+							</li>
+							<li class="list-group-item">
+								<div>
+									Semester: 	{{student.semester}} 
+								</div>
+							</li>
+						</ul>
+					</div>
+
+					<div class="col-lg-12" ng-show="tab === 2" >
+						{% if student_projects %}
+							<table class="table">
+								<thead>
+									<tr>
+										<th>
+											Name
+										</th>
+										<th>
+											Github link
+										</th>
+										<th>
+											Mentor
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for student_project in student_projects %}
+										<tr>
+											<td>
+												{{ student_project.project.project_name }}	
+											</td>
+											<td>
+												{{ student_project.project.github_link }}	
+											</td>
+											<td>
+												{{ student_project.project.mentor }}	
+											</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						{% else %}
+							<h4>You have no projects yet.</h4>
+						{% endif %}
+						<a href="{% url 'projects_app:project_register' %}" class="btn btn-primary" > + Add new project </a>
+
+					</div>
+
+					<div class="col-lg-12" ng-show="tab === 3">
+						<h4>There is no notification</h4>
+					</div>			
+				</div>
+			</div>
+		</div>
+		<!-- /#page-content-wrapper -->
+
+	</div><!-- /#wrapper -->
 		
 
 	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
@@ -68,6 +165,13 @@
 	<script src="{% static 'projects_app/js/angular/angular.min.js' %}"></script>
 	<script src="{% static 'projects_app/js/angular/angular-ui-router.min.js' %}"></script>
 
-	<script src="{% static 'projects_app/js/app.js' %}"></script>
+	<!-- Menu Toggle Script -->
+    <script>
+	    $("#menu-toggle").click(function(e) {
+	        e.preventDefault();
+	        $("#wrapper").toggleClass("toggled");
+	    });
+    </script>
+
 </body>
 </html>

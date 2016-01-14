@@ -11,6 +11,7 @@ urlpatterns = [
 				url(r'^login/$', views.login, name='login'),
 				url(r'^logout/$', views.logout, name='logout'),
 				url(r'^student/$', views.student_profile, name='student_profile'),
+				url(r'^student/project_register$', views.project_register, name='project_register'),
 				url(r'^mentor/$', views.mentor_profile, name='mentor_profile'),
 				url(r'^invalid_login/$', views.invalid_login, name='invalid_login'),
 				]
